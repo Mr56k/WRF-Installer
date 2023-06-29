@@ -1,4 +1,2 @@
-cd /home/wrf
-git clone https://github.com/Mr56k/WRF-Installer.git
-cd WRF-Installer/
+cd /home/wrf/WRF-Installer/
 bash ./WRF45.sh

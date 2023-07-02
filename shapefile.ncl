@@ -1,14 +1,10 @@
 begin
-  filename = "wrfout_d01_2023-06-29.nc"
-  a        = addfile(filename,"r")
-
+  a   = addfile(filename,"r")
   tc  = wrf_user_getvar(a,"tc",0)            ; temperature (degC)
 
  wtype          = "png"
  ;wtype@wkWidth  = 1920     ; Set the pixel size of PNG image.
  ;wtype@wkHeight = 1080
-
-  wks = gsn_open_wks(wtype,"Bodentemperatur")     ; send graphics to PNG file
 
   res                   = True               ; Contour options
   res@cnFillOn          = True               ; Create a color fill plot
@@ -21,9 +17,12 @@ begin
   ntimes = dimsizes(times)         ; number of times in the file
 
 
-  it = ntimes-1                    ; only interested in last time
+  it = ntimes-1
+  fname = times(it)                    ; only interested in last time
   res@TimeLabel = times(it)        ; set Valid time to use on plot
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  wks = gsn_open_wks(wtype, fname)     ; send graphics to PNG file
 
   contour = wrf_contour(a,wks,tc(0,:,:),res)       ; Create contour plot
 
@@ -51,9 +50,9 @@ begin
 
   delete(wks)
 
-  cmd = "composite -geometry 135x90+0+0 logo.png Bodentemperatur.png Bodentemperatur.png"
+  cmd = "composite -geometry 135x90+0+0 logo.png " + fname + ".png " + fname + ".png"
   system(cmd)
 
-  cmd = "magick Bodentemperatur.png Bodentemperatur.png"
+  cmd = "magick " + fname + ".png " + fname + ".gif"
   system(cmd)
 end
